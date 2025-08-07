@@ -1,3 +1,8 @@
-FROM ghcr.io/5etools-mirror-3/5etools-img:latest
+FROM node:22 AS build
+COPY . src
+WORKDIR src
+RUN   npm install && \
+      npm run build
 
-COPY . /var/www/localhost/htdocs/
+FROM nginx AS release
+COPY --from=build src/ /usr/share/nginx/html/
